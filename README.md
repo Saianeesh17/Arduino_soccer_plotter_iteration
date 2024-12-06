@@ -3,10 +3,18 @@ The python code contains some example data of random soccer attacks I mapped out
 The circuit diagram to set up the circuit is as follows:
 ![image](https://github.com/user-attachments/assets/ee3f90b1-c60c-4abf-8a60-414a2da5ed3f)
 
+The ball detection and models are based off of the following repository:
+https://github.com/Hmzbo/Football-Analytics-with-Deep-Learning-and-Computer-Vision
+
+
+Installation and setup for streamlit cv app:
+Install the required libraries listed in the file requirement.txt, you can use the command conda env create -f environment.yml to create the conda env I use but make sure the pytorch installation is compatible with your machine.
+Use the command steamlit run main.py to start the application.
+
 The parts for this project have been 3d printed.
 
 To run this project, you will need to download the python code, and install the serial library using the following command:
-pip install serial
+pip install pyserial
 
 you will then need to flash the code within the .ino file to an arduino of your choice
 
