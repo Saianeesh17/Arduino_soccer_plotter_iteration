@@ -63,7 +63,6 @@ def detect(cap, stframe, output_file_name, save_output, model_players, model_key
 
     # Open the file to save ball positions
     ball_position_file = open('ball_positions.txt', 'w')
-    ball_position_file.write('FrameNumber,X,Y\n')  # Optional header for CSV format
 
     show_k = plot_hyperparams[0]
     show_pal = plot_hyperparams[1]
