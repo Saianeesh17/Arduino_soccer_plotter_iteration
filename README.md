@@ -8,8 +8,10 @@ https://github.com/Hmzbo/Football-Analytics-with-Deep-Learning-and-Computer-Visi
 
 
 Installation and setup for streamlit cv app:
-Install the required libraries listed in the file requirement.txt, you can use the command conda env create -f environment.yml to create the conda env I use but make sure the pytorch installation is compatible with your machine.
-Use the command steamlit run main.py to start the application.
+1. Download anaconda from the following link, we will use its terminal to install dependencies: https://www.anaconda.com/download
+2. Install the required libraries listed in the file `requirement.txt`, you can use the command `conda env create -f environment.yml` to create the conda env I use but make sure the pytorch installation is compatible with your machine.
+3. Use the command `cd` to change directory to the streamlit app.
+4. Use the command `streamlit run main.py` to start the application.
 
 The parts for this project have been 3d printed.
 
