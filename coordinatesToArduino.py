@@ -1,34 +1,49 @@
 import serial
 import time
+import math
 
-# coordinate sets of certain soccer attacks
-# coordinates displayed as percentages of the length and width of the pitch (x, y-axis) 
-coordinate_sets = {
-    1: [(0.10, 0.20), (0.20, 0.45), (0.80, 0.25), (0.40, 0.6)],
-    2: [(0.15, 0.30), (0.60, 0.50), (0.90, 0.10), (0.25, 0.75), (0.50, 0.85)],
-    3: [(0.05, 0.95), (0.50, 0.20), (0.70, 0.80), (0.85, 0.40)],
-    4: [(0.12, 0.22), (0.18, 0.42), (0.75, 0.18)],
-    5: [(0.30, 0.50), (0.60, 0.30), (0.70, 0.60), (0.90, 0.80), (0.20, 0.10), (0.40, 0.90)],
-}
+# Function to read the coordinates from a text file
+def read_coordinates_from_file(file_path):
+    coordinates = []
+    with open(file_path, 'r') as file:
+        for line in file.readlines():
+            if line.strip():  # Skip empty lines
+                parts = line.split(',')
+                if len(parts) == 3:  # Ensure valid format
+                    try:
+                        # Extract x and y as floats
+                        x = float(parts[1])
+                        y = float(parts[2])
+                        coordinates.append((x, y))
+                    except ValueError:
+                        print(f"Invalid line: {line.strip()}")
+    return coordinates
 
-# Display all available coordinate sets
-print("Select a coordinate set to send:")
-for key, value in coordinate_sets.items():
-    print(f"{key}. Set {key}: {value}")
+# Function to select 5 coordinates at regular intervals
+def select_regular_intervals(coordinates, num_points=5):
+    if len(coordinates) < num_points:
+        print(f"Not enough coordinates ({len(coordinates)}) to select {num_points} points.")
+        return coordinates  # Return all if less than required
+    interval = len(coordinates) / num_points
+    selected = [coordinates[math.floor(i * interval)] for i in range(num_points)]
+    return selected
 
-# Get user input for which set to send
-while True:
-    try:
-        choice = int(input(f"Enter a number between 1 and {len(coordinate_sets)}: "))
-        if choice in coordinate_sets:
-            break
-        else:
-            print(f"Invalid choice. Please select a number between 1 and {len(coordinate_sets)}.")
-    except ValueError:
-        print(f"Invalid input. Please enter a number between 1 and {len(coordinate_sets)}.")
+# Input file containing coordinates
+file_path = "Streamlit web app/ball_positions.txt"
 
-# Choose the corresponding coordinates based on user input
-x_coords, y_coords = zip(*coordinate_sets[choice])
+coordinates = read_coordinates_from_file(file_path)
+
+# Select 5 coordinates at regular intervals
+selected_coordinates = select_regular_intervals(coordinates, num_points=5)
+print(f"Selected coordinates: {selected_coordinates}")
+
+# Ensure coordinates are valid
+if not selected_coordinates:
+    print("No valid coordinates selected.")
+    exit()
+
+# Split into x and y arrays
+x_coords, y_coords = zip(*selected_coordinates)
 
 # Open the serial port (adjust "COM3" and 9600 as needed for your setup)
 arduino = serial.Serial('COM3', 9600)
