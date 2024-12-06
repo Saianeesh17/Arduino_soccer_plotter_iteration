@@ -63,7 +63,7 @@ data_string = ';'.join(f"{x},{y}" for x, y in zip(x_coords, y_coords)) + ';'
 arduino.write((data_string + '\n').encode())  # '\n' indicates end of data
 
 # Wait for Arduino to process and send back data
-time.sleep(5)
+time.sleep(10)
 
 # Read and print response from Arduino
 while arduino.in_waiting > 0:

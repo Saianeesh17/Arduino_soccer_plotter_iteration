@@ -32,53 +32,50 @@ void loop() {
 
         // Parse data and store coordinates
         int startIndex = 0;
-        int semicolonIndex = data.indexOf(';'); // returns first index of semi-colon within serial input string
-        index = 0;  // Reset index to start storing new coordinates
+        int semicolonIndex = data.indexOf(';');
+        index = 0;
 
-        // Receive and print all coordinates back to serial
+        // Receive and store all coordinates
         while (semicolonIndex >= 0 && index < 10) {
             String coordPair = data.substring(startIndex, semicolonIndex);
-            int commaIndex = coordPair.indexOf(','); // comma index in order to split x and y coordinates
+            int commaIndex = coordPair.indexOf(',');
 
             if (commaIndex >= 0) {
-                // Separate x and y values and convert to floats
-                x_coords[index] = coordPair.substring(0, commaIndex).toFloat();
-                y_coords[index] = coordPair.substring(commaIndex + 1).toFloat();
-                index++; // append the index after previous x, y values inserted into respective arrays above
-
-                // send the received coordinates back to the serial monitor
+                x_coords[index] = coordPair.substring(0, commaIndex).toFloat() / 100.0;  // Convert percentage to ratio
+                y_coords[index] = coordPair.substring(commaIndex + 1).toFloat() / 100.0; // Convert percentage to ratio
                 Serial.print("Received x: ");
-                Serial.print(x_coords[index - 1]);
+                Serial.print(x_coords[index] * 100);  // Print percentage for clarity
                 Serial.print(", y: ");
-                Serial.println(y_coords[index - 1]);
+                Serial.println(y_coords[index] * 100);
+                index++;
             }
 
-            // Move to the next pair
             startIndex = semicolonIndex + 1;
             semicolonIndex = data.indexOf(';', startIndex);
         }
 
-        // After receiving all coordinates, start moving the motors
+        // After receiving all coordinates, move the motors
         for (int i = 0; i < index; i++) {
-            int targetXSteps = x_coords[i] * xMaxSteps;  // Convert x percentage to steps
-            int targetYSteps = y_coords[i] * yMaxSteps;  // Convert y percentage to steps
+            int targetXSteps = round(x_coords[i] * xMaxSteps);  // Convert x ratio to steps
+            int targetYSteps = round(y_coords[i] * yMaxSteps);  // Convert y ratio to steps
             
             // Calculate the difference from the current position
             int xStepDifference = targetXSteps - currentXPos;
             int yStepDifference = targetYSteps - currentYPos;
 
-            int xStepCount = 0;
-            int yStepCount = 0;
+            // Determine the direction of movement
+            int xDirection = (xStepDifference > 0) ? 1 : -1;
+            int yDirection = (yStepDifference > 0) ? 1 : -1;
 
-            // Move motors simultaneously
-            while (xStepCount != abs(xStepDifference) || yStepCount != abs(yStepDifference)) { // go till both motors reach destination
-                if (xStepCount < abs(xStepDifference)) {
-                    myStepper.step(xStepDifference > 0 ? 1 : -1); // calculate if motor needs to move in the positive or negative direcation
-                    xStepCount++;
+            // Move the motors simultaneously
+            while (xStepDifference != 0 || yStepDifference != 0) {
+                if (xStepDifference != 0) {
+                    myStepper.step(xDirection);
+                    xStepDifference -= xDirection;
                 }
-                if (yStepCount < abs(yStepDifference)) {
-                    myStepper2.step(yStepDifference > 0 ? -1 : 1); //inverted y axis as origin is on the top left
-                    yStepCount++;
+                if (yStepDifference != 0) {
+                    myStepper2.step(-yDirection);  // Inverted y-axis movement
+                    yStepDifference -= yDirection;
                 }
             }
 
@@ -86,9 +83,16 @@ void loop() {
             currentXPos = targetXSteps;
             currentYPos = targetYSteps;
 
-            delay(500); // Brief delay between movements
+            delay(500);
+
+            // Print updated position for debugging
+            Serial.print("Moved to x: ");
+            Serial.print(currentXPos);
+            Serial.print(", y: ");
+            Serial.println(currentYPos);
         }
 
         Serial.println("Movements completed.");
     }
 }
+
