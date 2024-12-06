@@ -32,3 +32,6 @@ Magnets: https://www.amazon.ca/LOVIMAG-Neodymium-Adhesive-Whiteboard-Scientific/
 
 Inspiration for plotter design:
 https://www.youtube.com/watch?v=og1506q67mo&t=46s
+
+Video explaining computer vision code in more detail:
+https://www.youtube.com/watch?v=yJWAtr3kvPU&list=LL&index=2&t=1024s
