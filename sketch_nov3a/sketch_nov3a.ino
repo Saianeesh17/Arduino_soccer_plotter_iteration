@@ -77,7 +77,7 @@ void loop() {
                     xStepCount++;
                 }
                 if (yStepCount < abs(yStepDifference)) {
-                    myStepper2.step(yStepDifference > 0 ? 1 : -1);
+                    myStepper2.step(yStepDifference > 0 ? -1 : 1); //inverted y axis as origin is on the top left
                     yStepCount++;
                 }
             }

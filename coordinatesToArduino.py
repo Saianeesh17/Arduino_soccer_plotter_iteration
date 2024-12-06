@@ -28,22 +28,31 @@ def select_regular_intervals(coordinates, num_points=5):
     selected = [coordinates[math.floor(i * interval)] for i in range(num_points)]
     return selected
 
+# Function to convert coordinates to percentages and make them whole numbers
+def convert_to_percentage(coordinates, max_x, max_y):
+    return [(round((x / max_x) * 100), round((y / max_y) * 100)) for x, y in coordinates]
+
 # Input file containing coordinates
 file_path = "Streamlit web app/ball_positions.txt"
 
-coordinates = read_coordinates_from_file(file_path)
+# Maximum values for x and y
+max_x = 314
+max_y = 546
 
-# Select 5 coordinates at regular intervals
+# Read and process the coordinates
+coordinates = read_coordinates_from_file(file_path)
 selected_coordinates = select_regular_intervals(coordinates, num_points=5)
-print(f"Selected coordinates: {selected_coordinates}")
+converted_coordinates = convert_to_percentage(selected_coordinates, max_x, max_y)
+
+print(f"Converted coordinates (percentages): {converted_coordinates}")
 
 # Ensure coordinates are valid
-if not selected_coordinates:
+if not converted_coordinates:
     print("No valid coordinates selected.")
     exit()
 
 # Split into x and y arrays
-x_coords, y_coords = zip(*selected_coordinates)
+x_coords, y_coords = zip(*converted_coordinates)
 
 # Open the serial port (adjust "COM3" and 9600 as needed for your setup)
 arduino = serial.Serial('COM3', 9600)
