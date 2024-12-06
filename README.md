@@ -15,8 +15,8 @@ Installation and setup for streamlit cv app:
 
 The parts for this project have been 3d printed.
 
-To run this project, you will need to download the python code, and install the serial library using the following command:
-pip install pyserial
+To run this project, you will need to download the python code which is found in the coordinatesToArduino.py file, and install the serial library using the following command:
+`pip install pyserial`
 
 you will then need to flash the code within the .ino file to an arduino of your choice
 
